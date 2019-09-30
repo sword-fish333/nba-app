@@ -6,6 +6,9 @@ class AuthScreen extends Component{
         state={
             loading:false
         };
+    goNext=()=>{
+        this.props.navigation.navigate('App');
+    }
     render() {
             if(this.state.loading){
               return(  <View style={styles.loading}>
@@ -15,7 +18,7 @@ class AuthScreen extends Component{
                 return (
                     <ScrollView style={styles.container}>
                      <AuthLogo/>
-                        <AuthForm/>
+                        <AuthForm goNext={this.goNext}/>
                     </ScrollView>
                 );
             }
