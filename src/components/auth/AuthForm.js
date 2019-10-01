@@ -2,6 +2,9 @@ import React,{Component} from 'react';
 import { StyleSheet, Text, View ,Button,Platform} from 'react-native';
 import Input from '../../utils/forms/input';
 import validationRules from '../../utils/forms/validationRules';
+import {connect} from 'react-redux';
+import {signUp,signIn} from '../../store/actions/user_actions';
+import {bindActionCreators} from 'redux';
 class AuthForm extends Component{
     state={
         type:'Login',
@@ -50,7 +53,37 @@ class AuthForm extends Component{
     }
 
     submitUser=()=>{
+        let isFormValid=true;
+        let formToSubmit={};
+        const formCopy=this.state.form;
+        for(let key in formCopy){
+            if(this.state.type==='Login'){
+                //Login
+                if(key!=='confirmPassword'){
+                    isFormValid=isFormValid && formCopy[key].valid;
+                    formToSubmit[key]=formCopy[key].value;
+                }
+            }else{
+                //Register
+                isFormValid=isFormValid && formCopy[key].valid;
+                formToSubmit[key]=formCopy[key].value;
 
+            }
+        }
+
+        if(isFormValid){
+        if(this.state.type==='Login'){
+           this.props.signIn(formToSubmit)
+        }else{
+            this.props.signUp(formToSubmit)
+
+
+        }
+        }else{
+            this.setState({
+                hasErrors:true
+            })
+        }
     }
 
     formHasErrors=()=>(
@@ -159,5 +192,15 @@ const styles = StyleSheet.create({
     }
 });
 
+mapStateToProps=state=>{
+    console.log(state);
+    return {
+        User: state.User
+    }
+};
 
-export default AuthForm;
+mapDispatchToProps=dispatch=>{
+    return bindActionCreators({signIn,signUp},dispatch);
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(AuthForm);
