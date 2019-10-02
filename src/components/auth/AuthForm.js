@@ -5,6 +5,7 @@ import validationRules from '../../utils/forms/validationRules';
 import {connect} from 'react-redux';
 import {signUp,signIn} from '../../store/actions/user_actions';
 import {bindActionCreators} from 'redux';
+import {setTokens} from '../../utils/misc';
 class AuthForm extends Component{
     state={
         type:'Login',
@@ -52,7 +53,23 @@ class AuthForm extends Component{
         });
     }
 
-    submitUser=()=>{
+    manageAccess=()=>{
+       if(!this.props.User.auth.uid){
+            this.setState({
+                hasErrors:true
+            })
+       }else{
+            setTokens(this.props.User.auth,()=>{
+                this.setState({
+                    hasErrors:false
+
+                })
+                this.props.goNext();
+            });
+       }
+    }
+
+    submitUser=async()=>{
         let isFormValid=true;
         let formToSubmit={};
         const formCopy=this.state.form;
@@ -73,9 +90,11 @@ class AuthForm extends Component{
 
         if(isFormValid){
         if(this.state.type==='Login'){
-           this.props.signIn(formToSubmit)
+        await   this.props.signIn(formToSubmit);
+        this.manageAccess();
         }else{
-            this.props.signUp(formToSubmit)
+           await this.props.signUp(formToSubmit);
+            this.manageAccess();
 
 
         }
@@ -193,7 +212,6 @@ const styles = StyleSheet.create({
 });
 
 mapStateToProps=state=>{
-    console.log(state);
     return {
         User: state.User
     }

@@ -2,12 +2,38 @@ import React,{Component} from 'react';
 import { StyleSheet, Text, View, Button,ScrollView,ActivityIndicator } from 'react-native';
 import AuthLogo from './authLogo';
 import AuthForm from './AuthForm';
+import {getTokens,setTokens} from '../../utils/misc';
+import {connect} from 'react-redux';
+import {autoSignIn} from '../../store/actions/user_actions';
+import {bindActionCreators} from 'redux';
 class AuthScreen extends Component{
         state={
-            loading:false
+            loading:true
         };
     goNext=()=>{
         this.props.navigation.navigate('App');
+    }
+
+    componentDidMount(){
+        getTokens((value)=>{
+            if(value[0][1]===null){
+                this.setState({
+                    loading:false
+                })
+            }else{
+        this.props.autoSignIn(value[1][1]).then(()=>{
+        if(!this.props.User.token){
+            this.setState({
+                loading:false
+            })
+        }else{
+            setTokens(this.props.User.auth,()=>{
+                this.goNext()
+            })
+        }
+        });
+            }
+        });
     }
     render() {
             if(this.state.loading){
@@ -42,5 +68,14 @@ const styles = StyleSheet.create({
     }
 });
 
+mapStateToProps=state=>{
+    return {
+        User: state.User
+    }
+};
 
-export default AuthScreen;
+mapDispatchToProps=dispatch=>{
+    return bindActionCreators({autoSignIn},dispatch);
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(AuthScreen);
