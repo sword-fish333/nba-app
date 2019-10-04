@@ -1,8 +1,12 @@
 import React,{Component} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import {connect} from 'react-redux';
+import {getNews} from '../../store/actions/news_action';
 class NewsScreen extends Component{
 
+    componentDidMount(){
+        this.props.dispatch(getNews());
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -23,5 +27,10 @@ const styles = StyleSheet.create({
     },
 });
 
-
-export default NewsScreen;
+function mapStateToProps(state) {
+console.log(state);
+return {
+    News:state.News
+}
+}
+export default connect(mapStateToProps)(NewsScreen);
