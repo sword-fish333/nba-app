@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 });
 
 mapStateToProps=state=>{
-    console.log('state',state);
+
     return {
         User: state.User
     }
