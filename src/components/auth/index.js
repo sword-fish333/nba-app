@@ -22,7 +22,7 @@ class AuthScreen extends Component{
                 })
             }else{
         this.props.autoSignIn(value[1][1]).then(()=>{
-        if(!this.props.User.token){
+        if(this.props.User.token){
             this.setState({
                 loading:false
             })
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
 });
 
 mapStateToProps=state=>{
+    console.log('state',state);
     return {
         User: state.User
     }

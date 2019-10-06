@@ -7,7 +7,7 @@ class ArticleScreen extends Component {
 
     render(){
         return (
-            <Txt>react native</Txt>
+            <Text>react native</Text>
         )
     }
 }
