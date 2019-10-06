@@ -9,6 +9,7 @@ import Moment from 'moment';
     componentDidMount(){
         Font.loadAsync({
             RobotoBold: require('../../../assets/fonts/Roboto-Bold.ttf'),
+            RobotoLight: require('../../../assets/fonts/Roboto-Light.ttf'),
 
         })
         this.props.dispatch(getNews());
@@ -22,7 +23,7 @@ import Moment from 'moment';
             news.articles.map((article,i)=>(
                 <TouchableOpacity
                 onPress={()=>this.props.navigation.navigate('Article',{
-                    ...article
+                   article
                 })}
                     key={i}
                 >
@@ -37,7 +38,7 @@ import Moment from 'moment';
                       <View style={styles.contentCard}>
                             <Text style={styles.titleCard}>{article.title}</Text>
                           <View style={styles.bottomCard}>
-                                <Text style={styles.bottomCardTeam}>{article.team}&nbsp;</Text>
+                                <Text style={styles.bottomCardTeam}>{article.team}&nbsp;- &nbsp;</Text>
 
                               <Text style={styles.bottomCardText}>Posted at {Moment(article.date).format('d MMMM')}</Text>
                           </View>
